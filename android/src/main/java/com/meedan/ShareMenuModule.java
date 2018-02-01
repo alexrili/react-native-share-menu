@@ -13,6 +13,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 
 public class ShareMenuModule extends ReactContextBaseJavaModule {
   public ShareMenuModule(ReactApplicationContext reactContext) {
@@ -38,9 +39,29 @@ public class ShareMenuModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getSharedFile(Callback successCallback) {
+    Activity mActivity = getCurrentActivity();
+    Intent intent = mActivity.getIntent();
+    Uri inputFile = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+    if(inputFile !=null) {
+      successCallback.invoke(inputFile.toString());
+    }else{
+      successCallback.invoke("");
+    }
+  }
+
+
+  @ReactMethod
   public void clearSharedText() {
     Activity mActivity = getCurrentActivity();
     Intent intent = mActivity.getIntent();
     intent.removeExtra(Intent.EXTRA_TEXT);
+  }
+
+  @ReactMethod
+  public void clearSharedFile() {
+    Activity mActivity = getCurrentActivity();
+    Intent intent = mActivity.getIntent();
+    intent.removeExtra(Intent.EXTRA_STREAM);
   }
 }
